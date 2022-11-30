@@ -1,47 +1,41 @@
 import React from 'react';
 import { useState } from 'react';
 import AsyncSelect from 'react-select/async';
+import axios from 'axios';
 
-const colourOptions = [
-  { value: 'ocean', label: 'Ocean', color: '#00B8D9', isFixed: true },
-  { value: 'blue', label: 'Blue', color: '#0052CC', isDisabled: true },
-  { value: 'purple', label: 'Purple', color: '#5243AA' },
-  { value: 'red', label: 'Red', color: '#FF5630', isFixed: true },
-  { value: 'orange', label: 'Orange', color: '#FF8B00' },
-  { value: 'yellow', label: 'Yellow', color: '#FFC400' },
-  { value: 'green', label: 'Green', color: '#36B37E' },
-  { value: 'forest', label: 'Forest', color: '#00875A' },
-  { value: 'slate', label: 'Slate', color: '#253858' },
-  { value: 'silver', label: 'Silver', color: '#666666' },
-];
-
-const filterColors = (inputValue) => {
-  return colourOptions.filter((i) =>
-    i.label.toLowerCase().includes(inputValue.toLowerCase())
-  );
+const fetchData = (inputValue, callback) => {
+  setTimeout(() => {
+    axios.get('/lookup', { params: { search: inputValue } })
+      .then((result) => {
+        const data = result.data;
+        console.log(data);
+        callback(data);
+      })
+      .catch((error) => {
+        console.log(error, "error retrieving search results");
+      });
+  }, 10);
 };
-
-const promiseOptions = (inputValue) =>
-  new Promise(function (myResolve, myReject) {
-    setTimeout(() => { myResolve(filterColors(inputValue)); }, 1000);
-  });
 
 function Invites(props) {
   const [selectedOptions, setSelectedOptions] = useState([]);
 
   const handleChange = (options) => {
-    setSelectedOptions(options);
+    setSelectedOptions(options.map((option) => option.value));
   };
 
   return (
     <>
       <AsyncSelect
-        isMulti
-        cacheOptions
-        loadOptions={promiseOptions}
+        isSearchable={true}
+        getOptionLabel={(option) => option.label}
+        getOptionValue={(option) => option.value}
+        formatOptionLabel={(option) => <div>{option.label}</div>}
+        loadOptions={fetchData}
         onChange={handleChange}
         placeholder="Search for a person..."
-        isDisabled = {props.disabled}
+        isDisabled={props.disabled}
+        isMulti
       />
       <button style={styles.submitButton}
         onClick={() => { props.createEvent(selectedOptions) }}
