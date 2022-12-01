@@ -1,6 +1,6 @@
 # cal-schedule
 **Author:** Nitya Agarwala  
-**Created:** 2022
+**Created:** 2022 <br/>
 Automatically schedules meetings/events for Dartmouth students based on Google Calendar availability
 
 ## Basic Details:
