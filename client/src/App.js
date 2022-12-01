@@ -49,7 +49,6 @@ function App() {
         <div> <span style={{fontWeight: 600}}>View Event: </span> <a href={eventData.htmlLink} target="_blank" rel="noreferrer">at this link</a></div>
       </div>
     );
-
   };
 
   const sendRequest = async (emails) => {
@@ -59,7 +58,7 @@ function App() {
     console.log(emails);
     const createEventObject = {
       eventName: name,
-      calendarIds: emails,
+      calendarIds: [...emails, 'primary'],
       emailAddresses: emails,
     };
     axios.post('/schedule', createEventObject)
