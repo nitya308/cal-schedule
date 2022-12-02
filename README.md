@@ -1,7 +1,8 @@
 # cal-schedule
 **Author:** Nitya Agarwala  
 **Created:** 2022 <br/>
-Automatically schedules meetings/events for Dartmouth students based on Google Calendar availability
+
+Automatically schedules team meetings/lunches/events for dartmouth students based on existing calendar availability using Google Calendar API, Node.js and ReactJS. It computes the most recent available block of free time and wrote search algorithm to compute most recent available time and creates the event on Google Calendar, sending invites to all attendees.
 
 ## Basic Details:
 **Languages:** JavaScript, NodeJS
