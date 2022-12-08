@@ -4,8 +4,12 @@
 
 Automatically schedules team meetings/lunches/events for dartmouth students based on existing calendar availability using Google Calendar API, Node.js and ReactJS. It computes the most recent available block of free time and wrote search algorithm to compute most recent available time and creates the event on Google Calendar, sending invites to all attendees.
 
+
+<img width="800" alt="Screenshot" src="https://user-images.githubusercontent.com/64368452/206534932-8726d434-e1cc-46f5-b1c7-8a513755e43a.png">
+
+
 ## Basic Details:
-**Languages:** JavaScript, NodeJS
+**Languages & Tools:** JavaScript, React.js, ExpressJS, NodeJS
 
 ## Main Features:
 * **Dartmouth Directory Lookup** <br/>
