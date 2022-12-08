@@ -17,7 +17,7 @@ app.post("/schedule", (req, res) => {
   let eventName = req.body.eventName;
   let eventDuration = req.body.eventDuration;
   // console.log(calendarIds, emailAddresses, eventName);
-  run(eventName, calendarIds, emailAddresses)
+  run(eventName, eventDuration, calendarIds, emailAddresses)
     .then((result) => { console.log("RESULT:", result); res.status(200).json(result) })
     .catch((err) => { console.log("ERROR", err); res.status(500).json(err) });
 });
