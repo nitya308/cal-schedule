@@ -15,8 +15,9 @@ app.post("/schedule", (req, res) => {
   let calendarIds = req.body.calendarIds;
   let emailAddresses = req.body.emailAddresses;
   let eventName = req.body.eventName;
-  console.log(calendarIds, emailAddresses, eventName);
-  run(eventName, calendarIds, emailAddresses)
+  let eventDuration = req.body.eventDuration;
+  // console.log(calendarIds, emailAddresses, eventName);
+  run(eventName, eventDuration, calendarIds, emailAddresses)
     .then((result) => { console.log("RESULT:", result); res.status(200).json(result) })
     .catch((err) => { console.log("ERROR", err); res.status(500).json(err) });
 });
@@ -25,7 +26,7 @@ app.post("/schedule", (req, res) => {
 app.get("/lookup", (req, res) => {
   search = req.query.search;
   let theUrl = 'https://api-lookup.dartmouth.edu/v1/lookup?q=' + search;
-  console.log(theUrl);
+  // console.log(theUrl);
   https.get(theUrl, (resp) => {
     let data = '';
     // A chunk of data has been received.
@@ -39,7 +40,7 @@ app.get("/lookup", (req, res) => {
       const nameOptions = usersArray.map((user) => {
         return { value: user.mail, label: user.displayName };
       });
-      console.log("Name options:", nameOptions);
+      // console.log("Name options:", nameOptions);
       res.status(200).json(nameOptions);
     });
   }).on("error", (err) => {

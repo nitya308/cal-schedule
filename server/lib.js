@@ -70,11 +70,11 @@ async function authorize() {
 // 3. Merge them into one array
 // 4. Calculate common free interval
 // 5. Return 3 possible intervals to user
-// 6. Create event at selected interval (first interval for now) and send invites
+// 6. Create event at selected interval and send invites
 
 // STEP 2
 // Get free busy times for each user
-async function getFreeBusyTimes(auth, eventName, calendarIds, emailAddresses) {
+async function getFreeBusyTimes(auth, eventName, eventDuration, calendarIds, emailAddresses) {
   const timeMin = new Date();
   timeMin.setDate(timeMin.getDate() + 1);
   const timeMax = new Date();
@@ -95,8 +95,18 @@ async function getFreeBusyTimes(auth, eventName, calendarIds, emailAddresses) {
 
   // console.log(res.data.calendars);
   var intervals = mergeDates(res.data.calendars);
-  var freeTimes = mergeFreeBusyTimes(intervals);
-  const event = await createEvent(auth, freeTimes[0][0], freeTimes[0][1], eventName, emailAddresses);
+
+  const secondsDuration = eventDuration * 60;
+  var freeTimes = mergeFreeBusyTimes(intervals, secondsDuration);
+
+  var startTime = freeTimes[0][0];
+
+  let end = parseISODate(startTime);
+  end.setSeconds(end.getSeconds() + secondsDuration);
+  let stringdate = end.toISOString();
+  let endTime = stringdate.substring(0, 19) + "Z";
+
+  const event = await createEvent(auth, startTime, endTime, eventName, emailAddresses);
   // console.log("event returned here:", event);
   return event;
 };
@@ -124,7 +134,7 @@ function mergeDates(calendars) {
 
 // STEP 4
 // Merge free busy times for all users
-function mergeFreeBusyTimes(intervals) {
+function mergeFreeBusyTimes(intervals, secondsDuration) {
   // Creating a current date to start looking at one day from current time
   let curr = new Date();
   curr.setDate(curr.getDate() + 1);
@@ -144,7 +154,7 @@ function mergeFreeBusyTimes(intervals) {
     stemp = parseISODate(s);
     curtemp = parseISODate(cur);
     // console.log(stemp, curtemp)
-    if (stemp > curtemp && (stemp - curtemp) > 1800000) {
+    if (stemp > curtemp && (stemp - curtemp) > secondsDuration) {
       freeTimes.push([cur, s])
     }
     cur = intervals[i].end
@@ -189,10 +199,10 @@ async function createEvent(auth, start, end, eventName, emailAddresses) {
 };
 
 // Function to run everything
-async function run(eventName, calendarIds, emailAddresses) {
+async function run(eventName, eventDuration, calendarIds, emailAddresses) {
   return authorize()
     .then((auth) => {
-      return getFreeBusyTimes(auth, eventName, calendarIds, emailAddresses)
+      return getFreeBusyTimes(auth, eventName, eventDuration, calendarIds, emailAddresses)
         .then((res) => { return res; });
     });
 };
